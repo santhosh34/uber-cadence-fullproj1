@@ -16,12 +16,12 @@ public class CustomerOnboardWorkflowImpl implements ICustomerOnboardWorkflow {
 
         this.customer = customer;
 
-        this.customer = activities.draftCustomerOnboard(customer);
+        this.customer = activities.draftCustomerOnboard(this.customer);
         if(this.customer.getStatus().equalsIgnoreCase("DRAFT")) {
-            this.customer = activities.review1CustomerOnboard(customer);
+            this.customer = activities.review1CustomerOnboard(this.customer);
         }
         Workflow.await(() -> "APPROVED".equalsIgnoreCase(this.customer.getStatus()));
-        this.customer = activities.sendWelcomeEmail(customer);
+        this.customer = activities.sendWelcomeEmail(this.customer);
         return "customer kaaka id: " + this.customer.getId() + ":Status:" + this.customer.getStatus();
     }
 

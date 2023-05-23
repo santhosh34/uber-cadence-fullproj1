@@ -12,15 +12,14 @@ public class CustomerOnboardWorkflowImpl implements ICustomerOnboardWorkflow {
 
     @Override
     public String onboardCustomer(Customer customer) {
-        System.out.println("Worker started Activity");
         this.customer = customer;
-        this.customer = activities.draftCustomerOnboard(customer);
+        this.customer = activities.draftCustomerOnboard(this.customer);
         if(this.customer.getStatus().equalsIgnoreCase("DRAFT")) {
-            System.out.println("Till here its fine");
-            this.customer = activities.review1CustomerOnboard(customer);
+            this.customer = activities.review1CustomerOnboard(this.customer);
         }
         Workflow.await(() -> "APPROVED".equalsIgnoreCase(this.customer.getStatus()));
-        this.customer = activities.sendWelcomeEmail(customer);
+        this.customer = activities.review2CustomerOnboard(this.customer);
+        this.customer = activities.sendWelcomeEmail(this.customer);
         return "customer kaaka id: " + this.customer.getId() + ":Status:" + this.customer.getStatus();
     }
 

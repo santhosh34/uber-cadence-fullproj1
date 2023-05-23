@@ -15,24 +15,24 @@ public class CadenceWorkflowClientConfiguration {
     public String cadenceDomain;
 
     @Bean
-    public WorkflowClient getWorkflowClient(Thrift2ProtoAdapter thrift2ProtoAdapter,WorkflowClientOptions workflowClientOptions){
+    public WorkflowClient workflowClient(Thrift2ProtoAdapter thrift2ProtoAdapter,WorkflowClientOptions workflowClientOptions){
         return WorkflowClient.newInstance(thrift2ProtoAdapter,workflowClientOptions);
     }
 
     @Bean
-    public WorkflowClientOptions getWorkflowClientOptions(){
+    public WorkflowClientOptions workflowClientOptions(){
         return WorkflowClientOptions
                 .newBuilder()
                 .setDomain(cadenceDomain).build();
     }
 
     @Bean
-    public Thrift2ProtoAdapter getThrift2ProtoAdapter(){
-        return new Thrift2ProtoAdapter(getIGrpcServiceStubs());
+    public Thrift2ProtoAdapter thrift2ProtoAdapter(){
+        return new Thrift2ProtoAdapter(iGrpcServiceStubs());
     }
 
     @Bean
-    public IGrpcServiceStubs getIGrpcServiceStubs(){
+    public IGrpcServiceStubs iGrpcServiceStubs(){
         return IGrpcServiceStubs.newInstance();
     }
 }

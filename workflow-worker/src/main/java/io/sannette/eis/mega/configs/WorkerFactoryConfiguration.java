@@ -14,9 +14,6 @@ public class WorkerFactoryConfiguration {
     @Autowired
     private WorkflowClient workflowClient;
 
-    @Autowired
-    private String taskListQueueName;
-
     @Bean
     public WorkerFactory workerFactory(WorkflowClient workflowClient){
         return WorkerFactory.newInstance(workflowClient);
