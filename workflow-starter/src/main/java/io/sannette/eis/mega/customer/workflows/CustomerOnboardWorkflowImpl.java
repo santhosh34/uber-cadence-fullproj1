@@ -13,9 +13,7 @@ public class CustomerOnboardWorkflowImpl implements ICustomerOnboardWorkflow {
 
     @Override
     public String onboardCustomer(Customer customer) {
-
         this.customer = customer;
-
         this.customer = activities.draftCustomerOnboard(this.customer);
         if(this.customer.getStatus().equalsIgnoreCase("DRAFT")) {
             this.customer = activities.review1CustomerOnboard(this.customer);

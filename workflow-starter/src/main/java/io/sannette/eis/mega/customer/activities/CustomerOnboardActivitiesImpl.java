@@ -12,7 +12,6 @@ public class CustomerOnboardActivitiesImpl implements ICustomerOnboardActivities
 
     @Override
     public Customer review1CustomerOnboard(Customer customer) {
-
         customer.setStatus("Reviewed1");
         customer.setReviewComment("Need to correct grammatical Mistakes");
         return customer;
