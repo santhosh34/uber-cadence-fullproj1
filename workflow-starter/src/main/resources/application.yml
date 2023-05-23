@@ -1,0 +1,8 @@
+server:
+  port: 9093
+
+
+cadence:
+  domain: test-domain
+  task-list-queue: customer-onboarding-queue
+  workflow-max-duration: 180
