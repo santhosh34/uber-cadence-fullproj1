@@ -1,6 +1,5 @@
 server:
-  port: 9093
-
+  port: 9193
 
 cadence:
   domain: test-domain

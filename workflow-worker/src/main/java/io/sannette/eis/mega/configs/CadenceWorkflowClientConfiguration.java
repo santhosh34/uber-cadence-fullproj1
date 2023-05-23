@@ -15,7 +15,7 @@ public class CadenceWorkflowClientConfiguration {
     public String cadenceDomain;
 
     @Bean
-    public WorkflowClient workflowClient(Thrift2ProtoAdapter thrift2ProtoAdapter,WorkflowClientOptions workflowClientOptions){
+    public WorkflowClient getWorkflowClient(Thrift2ProtoAdapter thrift2ProtoAdapter,WorkflowClientOptions workflowClientOptions){
         return WorkflowClient.newInstance(thrift2ProtoAdapter,workflowClientOptions);
     }
 

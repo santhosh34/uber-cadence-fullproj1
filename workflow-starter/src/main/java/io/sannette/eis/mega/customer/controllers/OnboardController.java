@@ -23,21 +23,17 @@ public class OnboardController {
 
     @PostMapping(path = "/customers/{customerId}/actions")
     public ResponseEntity updateCustomer(@PathVariable String customerId, @RequestBody Action action) {
-        System.out.println(action);
-        System.out.println(action.getCommand());
         String status = switch (action.getCommand()) {
             case "APPROVE" -> onboardService.approveCustomer(customerId);
             case "REJECT" -> onboardService.rejectCustomer(customerId);
             default -> throw new IllegalStateException("Unexpected value");
         };
-        System.out.println(status);
         return ResponseEntity.ok().body(status);
     }
 
     @GetMapping(path = "/customers/{customerId}/status")
-    public ResponseEntity updateCustomer(@PathVariable String customerId) {
+    public ResponseEntity getCustomerOnboardStatus(@PathVariable String customerId) {
         String queryResponse = onboardService.getCustomerOnboardStatus(customerId);
-        // Return the query status....
         return ResponseEntity.ok().body(queryResponse);
     }
 }

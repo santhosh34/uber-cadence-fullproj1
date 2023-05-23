@@ -12,7 +12,6 @@ import io.sannette.eis.mega.customer.workflows.CustomerOnboardWorkflowImpl;
 
 import static io.sannette.eis.mega.common.ServiceConstants.DOMAIN;
 
-
 public class OnboardingWorker {
     public static void main(String[] args) {
         WorkflowClient workflowClient =

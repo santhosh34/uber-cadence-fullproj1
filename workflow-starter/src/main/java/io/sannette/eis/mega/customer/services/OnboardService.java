@@ -16,19 +16,18 @@ import java.time.LocalTime;
 public class OnboardService {
 
     @Autowired
-    public WorkflowClient getWorkflowClient;
+    public WorkflowClient workflowClient;
 
     @Autowired
-    private String getTaskListQueue;
+    private String taskListQueueName;
 
     @Autowired
-    private Integer getWorkflowMaxDuration;
+    private Integer workflowMaxDuration;
 
     public String createCustomer(Customer customer) {
         String newCustomerId = generateNewCustomerId();
         customer.setId(newCustomerId);
-        ICustomerOnboardWorkflow customerOnboardWorkflow =
-                getWorkflowClient.newWorkflowStub(ICustomerOnboardWorkflow.class, getWorkflowOptions(newCustomerId));
+        ICustomerOnboardWorkflow customerOnboardWorkflow = workflowClient.newWorkflowStub(ICustomerOnboardWorkflow.class, getWorkflowOptions(newCustomerId));
         try {
             WorkflowExecution execution = WorkflowClient.start(customerOnboardWorkflow::onboardCustomer, customer);
         } catch (DuplicateWorkflowException e) {
@@ -36,46 +35,38 @@ public class OnboardService {
             System.out.println("Exception: " + e.getMessage());
         }
         return newCustomerId;
-        //  return this.getCustomerOnboardStatus(getCustomerWorkflowId(customer.getId()));
     }
 
     public String approveCustomer(String customerId) {
         System.out.println("Creating Customer");
         ICustomerOnboardWorkflow customerOnboardWorkflow =
-                getWorkflowClient.newWorkflowStub(ICustomerOnboardWorkflow.class,
-                        getCustomerWorkflowId(customerId));
+                workflowClient.newWorkflowStub(ICustomerOnboardWorkflow.class, getCustomerWorkflowId(customerId));
         try {
-            System.out.println("?????????? Comming");
             customerOnboardWorkflow.approveCustomerOnboard();
-            System.out.println("?????????? Came");
         } catch (DuplicateWorkflowException e) {
             e.printStackTrace();
             System.out.println("Exception: " + e.getMessage());
         }
-        return "APPROVED";
-       // return this.getCustomerOnboardStatus(getCustomerWorkflowId(customerId));
+        return this.getCustomerOnboardStatus(customerId);
     }
 
     public String rejectCustomer(String customerId) {
-        System.out.println("Creating Customer");
+
         ICustomerOnboardWorkflow customerOnboardWorkflow =
-                getWorkflowClient.newWorkflowStub(ICustomerOnboardWorkflow.class,
-                        getCustomerWorkflowId(customerId));
+                workflowClient.newWorkflowStub(ICustomerOnboardWorkflow.class, getCustomerWorkflowId(customerId));
         try {
             customerOnboardWorkflow.rejectCustomerOnboard();
         } catch (DuplicateWorkflowException e) {
             e.printStackTrace();
             System.out.println("Exception: " + e.getMessage());
         }
-        return "REJECTED";
-       // return this.getCustomerOnboardStatus(getCustomerWorkflowId(customerId));
+        return this.getCustomerOnboardStatus(customerId);
     }
 
     public String getCustomerOnboardStatus(String customerId) {
 
         ICustomerOnboardWorkflow customerOnboardWorkflow =
-                getWorkflowClient.newWorkflowStub(ICustomerOnboardWorkflow.class,
-                        getCustomerWorkflowId(customerId));
+                workflowClient.newWorkflowStub(ICustomerOnboardWorkflow.class, getCustomerWorkflowId(customerId));
         System.out.println("Till this its fine");
         try {
             return customerOnboardWorkflow.getCustomerOnboardingStatus();
@@ -87,10 +78,11 @@ public class OnboardService {
     }
 
     private WorkflowOptions getWorkflowOptions(String newCustomerId) {
-        return new WorkflowOptions.Builder()
-                .setTaskList(getTaskListQueue)
+        return new WorkflowOptions
+                .Builder()
+                .setTaskList(taskListQueueName)
                 .setWorkflowId(getCustomerWorkflowId(newCustomerId))
-                .setExecutionStartToCloseTimeout(Duration.ofDays(getWorkflowMaxDuration.intValue()))
+                .setExecutionStartToCloseTimeout(Duration.ofDays(workflowMaxDuration.intValue()))
                 .build();
     }
 
